@@ -2,63 +2,157 @@ from flask import Flask, render_template
 
 from load_data import (
     get_data_summary,
-    get_duplicate_count
+    get_processing_summary,
+    get_analysis_summary,
+    get_dashboard_summary,
+    get_preview
 )
+
 
 app = Flask(__name__)
 
 
+# =========================================
+# DASHBOARD
+# =========================================
 
 @app.route("/")
 def index():
+
+    dashboard = get_dashboard_summary()
+
+    analysis = get_analysis_summary()
+
+    preview = get_preview()
+
     return render_template(
         "index.html",
-        active="none"
+
+      active="dashboard",
+
+        dashboard=dashboard,
+
+        analysis=analysis,
+
+        preview=preview
     )
+
+
+# =========================================
+# DATA LOADING
+# =========================================
+
 @app.route("/data-loading")
 def data_loading():
-    error = None
 
-    summary = None
-
-    duplicate_count = None
-
-    try:
-
-        # Function 1:
-        # Get basic dataset information
-        summary = get_data_summary()
-
-        # Function 2:
-        # Get duplicate row count
-        duplicate_count = get_duplicate_count()
-
-
-    except FileNotFoundError as e:
-
-        error = str(e)
-
-    except Exception as e:
-
-        error = f"Unexpected error: {e}"
+    summary = get_data_summary()
 
     return render_template(
         "index.html",
 
-        # Tell HTML which section is active
-        active="data-loading",
+   active="data-loading",
 
-        # Send summary to HTML
-        summary=summary,
-
-        # Send duplicate count to HTML
-        duplicate_count=duplicate_count,
-
-        # Send error message to HTML
-        error=error
+        summary=summary
     )
 
 
+# =========================================
+# DATA PROCESSING
+# =========================================
+
+@app.route("/data-processing")
+def data_processing():
+
+    processing = get_processing_summary()
+
+    return render_template(
+        "index.html",
+
+        active="data-processing",
+
+
+        processing=processing
+    )
+
+
+# =========================================
+# DATA ANALYSIS
+# =========================================
+
+@app.route("/data-analysis")
+def data_analysis():
+
+    analysis = get_analysis_summary()
+
+    return render_template(
+        "index.html",
+
+        active="data-analysis",
+
+        analysis=analysis
+    )
+
+
+# =========================================
+# MODEL TRAINING
+# =========================================
+
+@app.route("/model-training")
+def model_training():
+
+    return render_template(
+        "index.html",
+
+        active="model-training"
+    )
+
+
+# =========================================
+# PREDICTION
+# =========================================
+
+@app.route("/prediction")
+def prediction():
+
+    return render_template(
+        "index.html",
+
+        active="prediction"
+    )
+
+
+# =========================================
+# REPORTS
+# =========================================
+
+@app.route("/reports")
+def reports():
+
+    dashboard = get_dashboard_summary()
+
+    analysis = get_analysis_summary()
+
+    processing = get_processing_summary()
+
+    return render_template(
+        "index.html",
+
+        active="reports",
+
+        dashboard=dashboard,
+
+        analysis=analysis,
+
+        processing=processing
+    )
+
+
+# =========================================
+# RUN APPLICATION
+# =========================================
 
 if __name__ == "__main__":
-    app.run(debug=True)
+
+    app.run(
+        debug=True
+    )

@@ -1,299 +1,1749 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
 
-    <title>Placement Prediction Project</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>
+        Placement Prediction
+    </title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
 
 </head>
 
 
 <body>
 
-    <!-- ========================================================= -->
-    <!-- HEADER                                                    -->
-    <!-- ========================================================= -->
 
-    <header class="topbar">
+<!-- ===================================== -->
+<!-- TOP BAR                               -->
+<!-- ===================================== -->
 
-        <h1>Placement Prediction Project</h1>
+<header class="topbar">
 
-    </header>
+    <div class="logo">
 
-
-    <!-- ========================================================= -->
-    <!-- MAIN LAYOUT                                               -->
-    <!-- ========================================================= -->
-
-    <div class="layout">
-
-
-        <!-- ===================================================== -->
-        <!-- LEFT SIDEBAR                                          -->
-        <!-- ===================================================== -->
-
-        <nav class="sidebar">
-
-            <ul>
-
-                <!-- Data Loading -->
-
-                <li>
-
-                    <a href="{{ url_for('data_loading') }}" class="menu-item
-                   {% if active == 'data-loading' %}active{% endif %}">
-
-                        Data Loading
-
-                    </a>
-
-                </li>
-
-
-                <!-- Future Sections -->
-
-                <li class="menu-item disabled">
-                    Preprocessing (coming soon)
-                </li>
-
-                <li class="menu-item disabled">
-                    Model Training (coming soon)
-                </li>
-
-                <li class="menu-item disabled">
-                    Prediction (coming soon)
-                </li>
-
-            </ul>
-
-        </nav>
-
-
-
-        <!-- ===================================================== -->
-        <!-- MAIN CONTENT                                          -->
-        <!-- ===================================================== -->
-
-        <main class="content">
-
-
-            <!-- ================================================= -->
-            <!-- HOME PAGE                                         -->
-            <!-- ================================================= -->
-
-            {% if active == 'none' %}
-
-            <h2>Welcome</h2>
-
-            <p>
-                Select an option from the left panel
-                to get started.
-            </p>
-
-            {% endif %}
-
-
-
-            <!-- ================================================= -->
-            <!-- DATA LOADING SECTION                              -->
-            <!-- ================================================= -->
-
-            {% if active == 'data-loading' %}
-
-            <h2>Data Loading</h2>
-
-
-            <!-- ============================================= -->
-            <!-- ERROR MESSAGE                                 -->
-            <!-- ============================================= -->
-
-            {% if error %}
-
-            <div class="error">
-                {{ error }}
-            </div>
-
-            {% endif %}
-
-
-
-            <!-- ============================================= -->
-            <!-- DATASET SUMMARY                               -->
-            <!-- ============================================= -->
-
-            {% if summary %}
-
-            <h3>Dataset Summary</h3>
-
-
-            <table class="summary-table">
-
-                <tr>
-
-                    <td>
-                        Number of Rows
-                    </td>
-
-                    <td>
-                        {{ summary.n_rows }}
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Number of Columns
-                    </td>
-
-                    <td>
-                        {{ summary.n_cols }}
-                    </td>
-
-                </tr>
-
-
-                <tr>
-
-                    <td>
-                        Duplicate Rows
-                    </td>
-
-                    <td>
-                        {{ duplicate_count }}
-                    </td>
-
-                </tr>
-
-            </table>
-
-
-
-            <!-- ========================================= -->
-            <!-- COLUMN INFORMATION                        -->
-            <!-- ========================================= -->
-
-            <h3>Column Information</h3>
-
-
-            <div class="table-wrapper">
-
-                <table class="data-table">
-
-                    <thead>
-
-                        <tr>
-
-                            <th>Column</th>
-
-                            <th>Data Type</th>
-
-                            <th>Missing Values</th>
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for col in summary.columns %}
-
-                        <tr>
-
-                            <td>
-                                {{ col }}
-                            </td>
-
-                            <td>
-                                {{ summary.dtypes[col] }}
-                            </td>
-
-                            <td>
-                                {{ summary.missing_counts[col] }}
-                            </td>
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-
-            <!-- ========================================= -->
-            <!-- DATA PREVIEW                              -->
-            <!-- ========================================= -->
-
-            <h3>Preview (First 10 Rows)</h3>
-
-
-            <div class="table-wrapper">
-
-                <table class="data-table">
-
-                    <thead>
-
-                        <tr>
-
-                            {% for col in summary.columns %}
-
-                            <th>
-                                {{ col }}
-                            </th>
-
-                            {% endfor %}
-
-                        </tr>
-
-                    </thead>
-
-
-                    <tbody>
-
-                        {% for row in summary.preview %}
-
-                        <tr>
-
-                            {% for col in summary.columns %}
-
-                            <td>
-                                {{ row[col] }}
-                            </td>
-
-                            {% endfor %}
-
-                        </tr>
-
-                        {% endfor %}
-
-                    </tbody>
-
-                </table>
-
-            </div>
-
-
-            {% endif %}
-
-            {% endif %}
-
-
-        </main>
+        🎓 Placement Prediction
 
     </div>
+
+
+    <div class="top-title">
+
+        Student Placement Analysis System
+
+    </div>
+
+</header>
+
+
+
+<div class="layout">
+
+
+<!-- ===================================== -->
+<!-- SIDEBAR                               -->
+<!-- ===================================== -->
+
+<nav class="sidebar">
+
+
+    <div class="sidebar-title">
+
+        PLACEMENT<br>
+
+        PREDICTION
+
+    </div>
+
+
+    <a href="{{ url_for('index') }}"
+       class="{% if active == 'dashboard' %}active{% endif %}">
+
+        🏠 Dashboard
+
+    </a>
+
+
+    <a href="{{ url_for('data_loading') }}"
+       class="{% if active == 'data-loading' %}active{% endif %}">
+
+        📂 Data Loading
+
+    </a>
+
+
+    <a href="{{ url_for('data_processing') }}"
+       class="{% if active == 'data-processing' %}active{% endif %}">
+
+        ⚙️ Data Processing
+
+    </a>
+
+
+    <a href="{{ url_for('data_analysis') }}"
+       class="{% if active == 'data-analysis' %}active{% endif %}">
+
+        📊 Data Analysis
+
+    </a>
+
+
+    <a href="{{ url_for('model_training') }}"
+       class="{% if active == 'model-training' %}active{% endif %}">
+
+        🤖 Model Training
+
+    </a>
+
+
+    <a href="{{ url_for('prediction') }}"
+       class="{% if active == 'prediction' %}active{% endif %}">
+
+        🎯 Prediction
+
+    </a>
+
+
+    <a href="{{ url_for('reports') }}"
+       class="{% if active == 'reports' %}active{% endif %}">
+
+        📄 Reports
+
+    </a>
+
+
+</nav>
+
+
+
+<!-- ===================================== -->
+<!-- MAIN CONTENT                          -->
+<!-- ===================================== -->
+
+<main class="content">
+
+
+
+<!-- ===================================== -->
+<!-- DASHBOARD                             -->
+<!-- ===================================== -->
+
+{% if active == "dashboard" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Dashboard
+    </h1>
+
+    <p>
+        Overview of the student placement dataset
+        and important statistics.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Dashboard Summary
+    </h2>
+
+    <p>
+
+        The dataset contains
+
+        <strong>
+            {{ dashboard.students }}
+        </strong>
+
+        students and
+
+        <strong>
+            {{ dashboard.features }}
+        </strong>
+
+        features.
+
+        The current placement rate is
+
+        <strong>
+            {{ dashboard.placement_rate }}%
+        </strong>.
+
+    </p>
+
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card blue">
+
+        <h3>
+            Total Students
+        </h3>
+
+        <h2>
+            {{ dashboard.students }}
+        </h2>
+
+    </div>
+
+
+    <div class="card green">
+
+        <h3>
+            Total Features
+        </h3>
+
+        <h2>
+            {{ dashboard.features }}
+        </h2>
+
+    </div>
+
+
+    <div class="card orange">
+
+        <h3>
+            Missing Values
+        </h3>
+
+        <h2>
+            {{ dashboard.missing }}
+        </h2>
+
+    </div>
+
+
+    <div class="card red">
+
+        <h3>
+            Duplicate Records
+        </h3>
+
+        <h2>
+            {{ dashboard.duplicates }}
+        </h2>
+
+    </div>
+
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Placement Overview
+    </h2>
+
+
+    <div class="overview-grid">
+
+
+        <div>
+
+            <span>
+                Placed Students
+            </span>
+
+            <strong>
+                {{ analysis.placed }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Not Placed
+            </span>
+
+            <strong>
+                {{ analysis.not_placed }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Placement Rate
+            </span>
+
+            <strong>
+                {{ analysis.placement_rate }}%
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Average CGPA
+            </span>
+
+            <strong>
+                {{ analysis.average_cgpa }}
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Data Preview
+    </h2>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    {% for column in preview[0].keys() %}
+
+                    <th>
+                        {{ column }}
+                    </th>
+
+                    {% endfor %}
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for row in preview %}
+
+                <tr>
+
+                    {% for value in row.values() %}
+
+                    <td>
+                        {{ value }}
+                    </td>
+
+                    {% endfor %}
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ===================================== -->
+<!-- DATA LOADING                          -->
+<!-- ===================================== -->
+
+{% if active == "data-loading" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Data Loading
+    </h1>
+
+    <p>
+        Load and inspect the student placement dataset.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Data Loading Summary
+    </h2>
+
+    <p>
+
+        The dataset has been successfully loaded.
+
+        It contains
+
+        <strong>
+            {{ summary.n_rows }}
+        </strong>
+
+        records and
+
+        <strong>
+            {{ summary.n_cols }}
+        </strong>
+
+        columns.
+
+    </p>
+
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card blue">
+
+        <h3>
+            Total Rows
+        </h3>
+
+        <h2>
+            {{ summary.n_rows }}
+        </h2>
+
+    </div>
+
+
+    <div class="card green">
+
+        <h3>
+            Total Columns
+        </h3>
+
+        <h2>
+            {{ summary.n_cols }}
+        </h2>
+
+    </div>
+
+
+    <div class="card orange">
+
+        <h3>
+            Missing Values
+        </h3>
+
+        <h2>
+            {{ summary.total_missing }}
+        </h2>
+
+    </div>
+
+
+    <div class="card red">
+
+        <h3>
+            Duplicate Records
+        </h3>
+
+        <h2>
+            {{ summary.duplicate_count }}
+        </h2>
+
+    </div>
+
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Missing Value Summary
+    </h2>
+
+
+    {% if summary.missing_details %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Column
+                    </th>
+
+                    <th>
+                        Missing Values
+                    </th>
+
+                    <th>
+                        Percentage
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for item in summary.missing_details %}
+
+                <tr>
+
+                    <td>
+                        {{ item.column }}
+                    </td>
+
+                    <td>
+                        {{ item.missing }}
+                    </td>
+
+                    <td>
+                        {{ item.percentage }}%
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="success-message">
+
+        ✓ No missing values found.
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Column Information
+    </h2>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Column
+                    </th>
+
+                    <th>
+                        Data Type
+                    </th>
+
+                    <th>
+                        Missing Values
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for column in summary.columns %}
+
+                <tr>
+
+                    <td>
+                        {{ column }}
+                    </td>
+
+                    <td>
+                        {{ summary.dtypes[column] }}
+                    </td>
+
+                    <td>
+                        {{ summary.missing_counts[column] }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ===================================== -->
+<!-- DATA PROCESSING                       -->
+<!-- ===================================== -->
+
+{% if active == "data-processing" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Data Processing
+    </h1>
+
+    <p>
+        Clean and prepare the dataset for further analysis.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Data Processing Summary
+    </h2>
+
+    <p>
+
+        The dataset was checked for missing values
+        and duplicate records.
+
+        Numeric missing values are handled using
+        the median and categorical missing values
+        using the mode.
+
+    </p>
+
+</div>
+
+
+<!-- SUMMARY CARDS -->
+
+<div class="cards">
+
+
+    <div class="card orange">
+
+        <h3>
+            Total Missing Values
+        </h3>
+
+        <h2>
+            {{ processing.missing_before }}
+        </h2>
+
+    </div>
+
+
+    <div class="card blue">
+
+        <h3>
+            Columns With Missing Values
+        </h3>
+
+        <h2>
+            {{ processing.missing_columns }}
+        </h2>
+
+    </div>
+
+
+    <div class="card red">
+
+        <h3>
+            Duplicate Records
+        </h3>
+
+        <h2>
+            {{ processing.duplicates_before }}
+        </h2>
+
+    </div>
+
+
+    <div class="card green">
+
+        <h3>
+            Rows After Processing
+        </h3>
+
+        <h2>
+            {{ processing.rows_after }}
+        </h2>
+
+    </div>
+
+
+</div>
+
+
+<!-- MISSING DETAILS -->
+
+<div class="section">
+
+    <h2>
+        Missing Value Details
+    </h2>
+
+
+    {% if processing.missing_details %}
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Column Name
+                    </th>
+
+                    <th>
+                        Missing Values
+                    </th>
+
+                    <th>
+                        Percentage
+                    </th>
+
+                    <th>
+                        Handling Method
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                {% for item in processing.missing_details %}
+
+
+                <tr>
+
+                    <td>
+                        {{ item.column }}
+                    </td>
+
+
+                    <td>
+                        {{ item.missing }}
+                    </td>
+
+
+                    <td>
+                        {{ item.percentage }}%
+                    </td>
+
+
+                    <td>
+                        {{ item.method }}
+                    </td>
+
+
+                    <td>
+
+                        <span class="status-warning">
+
+                            {{ item.status }}
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                {% endfor %}
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+
+    {% else %}
+
+
+    <div class="success-message">
+
+        ✓ No missing values found.
+
+    </div>
+
+
+    {% endif %}
+
+</div>
+
+
+
+<!-- PROCESSING STEPS -->
+
+<div class="section">
+
+    <h2>
+        Processing Steps
+    </h2>
+
+
+    <div class="steps">
+
+
+        <div>
+            ✓ Check missing values
+        </div>
+
+
+        <div>
+            ✓ Handle numeric missing values
+        </div>
+
+
+        <div>
+            ✓ Handle categorical missing values
+        </div>
+
+
+        <div>
+            ✓ Check duplicate records
+        </div>
+
+
+        <div>
+            ✓ Remove duplicate records
+        </div>
+
+
+        <div>
+            ✓ Generate processed dataset
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- PROCESSING RESULTS -->
+
+<div class="section">
+
+    <h2>
+        Processing Results
+    </h2>
+
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>
+                        Parameter
+                    </th>
+
+                    <th>
+                        Before Processing
+                    </th>
+
+                    <th>
+                        After Processing
+                    </th>
+
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+
+                <tr>
+
+                    <td>
+                        Missing Values
+                    </td>
+
+                    <td>
+                        {{ processing.missing_before }}
+                    </td>
+
+                    <td>
+                        {{ processing.missing_after }}
+                    </td>
+
+                    <td>
+
+                        <span class="status-success">
+
+                            ✓ Completed
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Duplicate Records
+                    </td>
+
+                    <td>
+                        {{ processing.duplicates_before }}
+                    </td>
+
+                    <td>
+                        {{ processing.duplicates_after }}
+                    </td>
+
+                    <td>
+
+                        <span class="status-success">
+
+                            ✓ Checked
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Total Rows
+                    </td>
+
+                    <td>
+                        {{ processing.rows_before }}
+                    </td>
+
+                    <td>
+                        {{ processing.rows_after }}
+                    </td>
+
+                    <td>
+
+                        <span class="status-success">
+
+                            ✓ Ready
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+                <tr>
+
+                    <td>
+                        Total Columns
+                    </td>
+
+                    <td>
+                        {{ processing.columns_before }}
+                    </td>
+
+                    <td>
+                        {{ processing.columns_after }}
+                    </td>
+
+                    <td>
+
+                        <span class="status-success">
+
+                            ✓ Ready
+
+                        </span>
+
+                    </td>
+
+                </tr>
+
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ===================================== -->
+<!-- DATA ANALYSIS                         -->
+<!-- ===================================== -->
+
+{% if active == "data-analysis" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Data Analysis
+    </h1>
+
+    <p>
+        Analyze student performance and placement statistics.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Data Analysis Summary
+    </h2>
+
+    <p>
+
+        Out of
+
+        <strong>
+            {{ analysis.total_students }}
+        </strong>
+
+        students,
+
+        <strong>
+            {{ analysis.placed }}
+        </strong>
+
+        students are placed.
+
+        The overall placement rate is
+
+        <strong>
+            {{ analysis.placement_rate }}%
+        </strong>.
+
+    </p>
+
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card green">
+
+        <h3>
+            Placed Students
+        </h3>
+
+        <h2>
+            {{ analysis.placed }}
+        </h2>
+
+    </div>
+
+
+    <div class="card red">
+
+        <h3>
+            Not Placed
+        </h3>
+
+        <h2>
+            {{ analysis.not_placed }}
+        </h2>
+
+    </div>
+
+
+    <div class="card blue">
+
+        <h3>
+            Average CGPA
+        </h3>
+
+        <h2>
+            {{ analysis.average_cgpa }}
+        </h2>
+
+    </div>
+
+
+    <div class="card orange">
+
+        <h3>
+            Placement Rate
+        </h3>
+
+        <h2>
+            {{ analysis.placement_rate }}%
+        </h2>
+
+    </div>
+
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Performance Summary
+    </h2>
+
+
+    <div class="overview-grid">
+
+
+        <div>
+
+            <span>
+                Average Attendance
+            </span>
+
+            <strong>
+                {{ analysis.average_attendance }}%
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Average Coding Score
+            </span>
+
+            <strong>
+                {{ analysis.average_coding }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Average Aptitude Score
+            </span>
+
+            <strong>
+                {{ analysis.average_aptitude }}
+            </strong>
+
+        </div>
+
+
+        <div>
+
+            <span>
+                Average Salary
+            </span>
+
+            <strong>
+                {{ analysis.average_salary }} LPA
+            </strong>
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Key Insights
+    </h2>
+
+
+    <div class="insights">
+
+
+        <p>
+
+            📌
+
+            {{ analysis.placed }}
+
+            students are placed.
+
+        </p>
+
+
+        <p>
+
+            📌
+
+            {{ analysis.not_placed }}
+
+            students are not placed.
+
+        </p>
+
+
+        <p>
+
+            📌
+
+            Average CGPA is
+
+            <strong>
+                {{ analysis.average_cgpa }}
+            </strong>.
+
+        </p>
+
+
+        <p>
+
+            📌
+
+            Average attendance is
+
+            <strong>
+                {{ analysis.average_attendance }}%
+            </strong>.
+
+        </p>
+
+
+        <p>
+
+            📌
+
+            Average coding score is
+
+            <strong>
+                {{ analysis.average_coding }}
+            </strong>.
+
+        </p>
+
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ===================================== -->
+<!-- MODEL TRAINING                        -->
+<!-- ===================================== -->
+
+{% if active == "model-training" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Model Training
+    </h1>
+
+    <p>
+        Train a machine learning model using
+        processed student data.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Model Training Summary
+    </h2>
+
+    <p>
+
+        This module will select important features,
+        split the dataset into training and testing
+        data, train machine learning models and
+        evaluate their performance.
+
+    </p>
+
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card blue">
+
+        <h3>
+            Feature Selection
+        </h3>
+
+        <h2>
+            Ready
+        </h2>
+
+    </div>
+
+
+    <div class="card green">
+
+        <h3>
+            Train / Test
+        </h3>
+
+        <h2>
+            80 / 20
+        </h2>
+
+    </div>
+
+
+    <div class="card orange">
+
+        <h3>
+            Model
+        </h3>
+
+        <h2>
+            Pending
+        </h2>
+
+    </div>
+
+
+    <div class="card red">
+
+        <h3>
+            Accuracy
+        </h3>
+
+        <h2>
+            --
+        </h2>
+
+    </div>
+
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Training Steps
+    </h2>
+
+
+    <div class="steps">
+
+
+        <div>
+            1. Select features
+        </div>
+
+
+        <div>
+            2. Prepare target variable
+        </div>
+
+
+        <div>
+            3. Split dataset
+        </div>
+
+
+        <div>
+            4. Train model
+        </div>
+
+
+        <div>
+            5. Evaluate model
+        </div>
+
+
+        <div>
+            6. Select best model
+        </div>
+
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ===================================== -->
+<!-- PREDICTION                            -->
+<!-- ===================================== -->
+
+{% if active == "prediction" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Prediction
+    </h1>
+
+    <p>
+        Predict the placement status of a student.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Prediction Summary
+    </h2>
+
+    <p>
+
+        Enter student academic and performance
+        information to predict placement status.
+
+    </p>
+
+</div>
+
+
+<div class="prediction-form">
+
+
+    <label>
+        CGPA
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        placeholder="Enter CGPA"
+    >
+
+
+    <label>
+        Attendance Percentage
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        placeholder="Enter attendance"
+    >
+
+
+    <label>
+        Internships
+    </label>
+
+    <input
+        type="number"
+        placeholder="Number of internships"
+    >
+
+
+    <label>
+        Projects
+    </label>
+
+    <input
+        type="number"
+        placeholder="Number of projects"
+    >
+
+
+    <label>
+        Coding Test Score
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        placeholder="Coding score"
+    >
+
+
+    <label>
+        Aptitude Test Score
+    </label>
+
+    <input
+        type="number"
+        step="0.01"
+        placeholder="Aptitude score"
+    >
+
+
+    <button>
+        Predict Placement
+    </button>
+
+
+</div>
+
+
+{% endif %}
+
+
+
+<!-- ===================================== -->
+<!-- REPORTS                               -->
+<!-- ===================================== -->
+
+{% if active == "reports" %}
+
+
+<div class="page-header">
+
+    <h1>
+        Reports
+    </h1>
+
+    <p>
+        Overall dataset and placement summary.
+    </p>
+
+</div>
+
+
+<div class="summary-box">
+
+    <h2>
+        Reports Summary
+    </h2>
+
+    <p>
+
+        The project contains
+
+        <strong>
+            {{ dashboard.students }}
+        </strong>
+
+        student records.
+
+        The overall placement rate is
+
+        <strong>
+            {{ analysis.placement_rate }}%
+        </strong>.
+
+    </p>
+
+</div>
+
+
+<div class="cards">
+
+
+    <div class="card blue">
+
+        <h3>
+            Total Students
+        </h3>
+
+        <h2>
+            {{ dashboard.students }}
+        </h2>
+
+    </div>
+
+
+    <div class="card green">
+
+        <h3>
+            Placement Rate
+        </h3>
+
+        <h2>
+            {{ analysis.placement_rate }}%
+        </h2>
+
+    </div>
+
+
+    <div class="card orange">
+
+        <h3>
+            Average CGPA
+        </h3>
+
+        <h2>
+            {{ analysis.average_cgpa }}
+        </h2>
+
+    </div>
+
+
+    <div class="card red">
+
+        <h3>
+            Average Salary
+        </h3>
+
+        <h2>
+            {{ analysis.average_salary }} LPA
+        </h2>
+
+    </div>
+
+
+</div>
+
+
+<div class="section">
+
+    <h2>
+        Final Insights
+    </h2>
+
+
+    <div class="insights">
+
+
+        <p>
+
+            ✓ Total students:
+
+            <strong>
+                {{ dashboard.students }}
+            </strong>
+
+        </p>
+
+
+        <p>
+
+            ✓ Total features:
+
+            <strong>
+                {{ dashboard.features }}
+            </strong>
+
+        </p>
+
+
+        <p>
+
+            ✓ Placement rate:
+
+            <strong>
+                {{ analysis.placement_rate }}%
+            </strong>
+
+        </p>
+
+
+        <p>
+
+            ✓ Average CGPA:
+
+            <strong>
+                {{ analysis.average_cgpa }}
+            </strong>
+
+        </p>
+
+
+        <p>
+
+            ✓ Average salary of placed students:
+
+            <strong>
+                {{ analysis.average_salary }} LPA
+            </strong>
+
+        </p>
+
+
+    </div>
+
+</div>
+
+
+{% endif %}
+
+
+</main>
+
+
+</div>
 
 
 </body>
 
 </html>
-```
