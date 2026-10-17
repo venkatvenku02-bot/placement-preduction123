@@ -10,16 +10,30 @@ DATA_PATH = os.path.join(
 )
 
 
-def load_data():
-    if not os.path.exists(DATA_PATH):
-        raise FileNotFoundError(
-            f"Dataset not found: {DATA_PATH}"
-        )
+_DATA_CACHE = None
+_DATA_SUMMARY_CACHE = None
+_PROCESSING_SUMMARY_CACHE = None
+_ANALYSIS_SUMMARY_CACHE = None
+_DASHBOARD_SUMMARY_CACHE = None
+_PREVIEW_CACHE = None
 
-    return pd.read_csv(DATA_PATH)
+
+def load_data():
+    global _DATA_CACHE
+    if _DATA_CACHE is None:
+        if not os.path.exists(DATA_PATH):
+            raise FileNotFoundError(
+                f"Dataset not found: {DATA_PATH}"
+            )
+        _DATA_CACHE = pd.read_csv(DATA_PATH)
+
+    return _DATA_CACHE
 
 
 def get_data_summary():
+    global _DATA_SUMMARY_CACHE
+    if _DATA_SUMMARY_CACHE is not None:
+        return _DATA_SUMMARY_CACHE
 
     df = load_data()
 
@@ -44,7 +58,7 @@ def get_data_summary():
                 "percentage": percentage
             })
 
-    return {
+    _DATA_SUMMARY_CACHE = {
         "n_rows": int(df.shape[0]),
 
         "n_cols": int(df.shape[1]),
@@ -82,8 +96,13 @@ def get_data_summary():
         )
     }
 
+    return _DATA_SUMMARY_CACHE
+
 
 def get_processing_summary():
+    global _PROCESSING_SUMMARY_CACHE
+    if _PROCESSING_SUMMARY_CACHE is not None:
+        return _PROCESSING_SUMMARY_CACHE
 
     df = load_data()
 
@@ -221,7 +240,7 @@ def get_processing_summary():
     )
 
 
-    return {
+    _PROCESSING_SUMMARY_CACHE = {
 
         "missing_before":
             missing_before,
@@ -255,8 +274,13 @@ def get_processing_summary():
 
     }
 
+    return _PROCESSING_SUMMARY_CACHE
+
 
 def get_analysis_summary():
+    global _ANALYSIS_SUMMARY_CACHE
+    if _ANALYSIS_SUMMARY_CACHE is not None:
+        return _ANALYSIS_SUMMARY_CACHE
 
     df = load_data()
 
@@ -321,7 +345,7 @@ def get_analysis_summary():
     )
 
 
-    return {
+    _ANALYSIS_SUMMARY_CACHE = {
 
         "total_students":
             total_students,
@@ -354,14 +378,19 @@ def get_analysis_summary():
             average_salary
     }
 
+    return _ANALYSIS_SUMMARY_CACHE
+
 
 def get_dashboard_summary():
+    global _DASHBOARD_SUMMARY_CACHE
+    if _DASHBOARD_SUMMARY_CACHE is not None:
+        return _DASHBOARD_SUMMARY_CACHE
 
     data = get_data_summary()
 
     analysis = get_analysis_summary()
 
-    return {
+    _DASHBOARD_SUMMARY_CACHE = {
 
         "students":
             data["n_rows"],
@@ -380,13 +409,20 @@ def get_dashboard_summary():
 
     }
 
+    return _DASHBOARD_SUMMARY_CACHE
+
 
 def get_preview():
+    global _PREVIEW_CACHE
+    if _PREVIEW_CACHE is not None:
+        return _PREVIEW_CACHE
 
     df = load_data()
 
-    return df.head(10).fillna(
+    _PREVIEW_CACHE = df.head(10).fillna(
         "-"
     ).to_dict(
         orient="records"
     )
+
+    return _PREVIEW_CACHE
